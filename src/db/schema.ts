@@ -36,8 +36,8 @@ export const expansions = pgTable("expansions", {
 export const cards = pgTable("cards", {
   id: text("id").primaryKey().$defaultFn(createId),
   name: text("name").notNull(),
-  category: cardCategoriesEnum().notNull(),
-  type: pokemonTypesEnum(),
+  category: cardCategoriesEnum("category").notNull(),
+  type: pokemonTypesEnum("type"),
   expansionId: text("expansion_id")
     .notNull()
     .references(() => expansions.id),
@@ -46,14 +46,18 @@ export const cards = pgTable("cards", {
 
 export const matchResults = pgTable("match_results", {
   id: text("id").primaryKey().$defaultFn(createId),
-  comeback: boolean("comeback").notNull(),
-  concede: boolean("concede").notNull(),
+  turns: integer("turns").notNull(),
+  winnerComeback: boolean("winner_comeback").notNull(),
+  winnerName: text("winner_name").notNull(),
+  winnerPoints: integer("winner_points").notNull(),
   winnerCoinFirst: boolean("winner_coin_first").notNull(),
   winnerTypeAdvantage: boolean("winner_type_advantage").notNull(),
   winnerTypeDisadvantage: boolean("winner_type_disadvantage").notNull(),
-  winnerEnergies: pokemonTypesEnum().array().notNull(),
-  loserEnergies: pokemonTypesEnum().array().notNull(),
-  turns: integer("turns").notNull(),
+  winnerEnergies: pokemonTypesEnum("winner_energies").array().notNull(),
+  loserName: text("winner_name").notNull(),
+  loserConcede: boolean("loser_concede").notNull(),
+  loserPoints: integer("loser_points").notNull(),
+  loserEnergies: pokemonTypesEnum("loser_energies").array().notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow()
 });
 
