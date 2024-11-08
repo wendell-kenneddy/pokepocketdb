@@ -1,14 +1,12 @@
-import z from "zod";
+import { createInsertSchema } from "drizzle-zod";
 import { db } from "../../../db";
 import { expansions } from "../../../db/schema";
 
-const expansionSchema = z.object({
-  name: z.string()
-});
+const createExpansionSchema = createInsertSchema(expansions);
 
 export class CreateExpansionService {
   async execute(data: unknown) {
-    const { name } = expansionSchema.parse(data);
+    const { name } = createExpansionSchema.parse(data);
     await db.insert(expansions).values({ name });
   }
 }
