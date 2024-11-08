@@ -8,6 +8,27 @@
       "when": 1731012888507,
       "tag": "0000_furry_hemingway",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1731085566491,
+      "tag": "0001_smart_killmonger",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1731085853343,
+      "tag": "0002_jittery_the_executioner",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1731092886204,
+      "tag": "0003_concerned_la_nuit",
+      "breakpoints": true
     }
   ]
 }
