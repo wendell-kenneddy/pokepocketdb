@@ -27,6 +27,7 @@
     "drizzle-orm": "^0.36.0",
     "drizzle-zod": "^0.5.1",
     "express": "^4.21.1",
+    "express-async-errors": "^3.1.1",
     "helmet": "^8.0.0",
     "postgres": "^3.4.5",
     "zod": "^3.23.8"
