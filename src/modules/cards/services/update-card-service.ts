@@ -10,7 +10,11 @@ import { uuidSchema } from "../../../lib/uuid-schema";
 
 const updateCardSchema = z.object({
   id: uuidSchema,
-  name: z.string().optional(),
+  name: z
+    .string()
+    .trim()
+    .min(3, "Card name must be at least 3 characters long.")
+    .optional(),
   type: z.enum(pokemonTypesEnum.enumValues).optional(),
   category: z.enum(cardCategoriesEnum.enumValues).optional(),
   expansionId: uuidSchema.optional()
