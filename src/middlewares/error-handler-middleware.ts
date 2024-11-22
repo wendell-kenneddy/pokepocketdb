@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { PostgresError } from "postgres";
 import { ZodError } from "zod";
 
 interface ErrorResponse {
@@ -25,6 +26,14 @@ export function errorHandlerMiddleware(
     json.message = "Invalid JSON";
     json.status = 400;
     json.errors = [];
+  } else if (err instanceof PostgresError) {
+    json.message = "Invalid input.";
+    json.status = 400;
+    if (err.detail && err.detail.includes("(name, expansion_id)")) {
+      (json.errors as string[]).push(
+        "Card with given name already exists within the given expansion."
+      );
+    }
   } else if (err instanceof ZodError) {
     json.message = "Invalid input";
     json.status = 400;
