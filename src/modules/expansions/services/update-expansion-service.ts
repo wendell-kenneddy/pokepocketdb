@@ -4,8 +4,9 @@ import { db } from "../../../db";
 import { expansions } from "../../../db/schema";
 import { uuidSchema } from "../../../lib/uuid-schema";
 
-const updateExpansionSchema = z.object({
-  id: uuidSchema,
+const updateExpansionSchema = z
+  .object({
+    id: uuidSchema,
   name: z.string()
 });
 
