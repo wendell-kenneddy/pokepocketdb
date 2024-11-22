@@ -10,23 +10,17 @@ type Card = typeof cards.$inferSelect;
 
 export class CardsController {
   create = async (req: Request, res: Response) => {
-    await new CreateCardService().execute(req.body);
-    res.json({ success: true, message: "Card created." });
+    const id = await new CreateCardService().execute(req.body);
+    res.json({ success: true, message: "Card created.", data: id });
   };
 
   get = async (req: Request, res: Response) => {
-    const { id, type, category, expansionId, limit, page } = req.params;
+    const { id } = req.query;
     let data: Card | Card[] | null = null;
 
     data = id
       ? await new GetCardService().execute(id)
-      : await new GetManyCardsService().execute({
-          type,
-          category,
-          expansionId,
-          limit,
-          page
-        });
+      : await new GetManyCardsService().execute(req.query);
 
     res.json({ success: true, data });
   };
