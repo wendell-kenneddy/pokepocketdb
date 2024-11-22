@@ -1,23 +1,17 @@
 import { Request, Response } from "express";
 import { CreateMatchResultService } from "./services/create-match-result-service";
 import { DeleteMatchResultService } from "./services/delete-match-result-service";
-import {
-  GetManyMatchResultsServie,
-  MatchResultsPage
-} from "./services/get-many-match-results-service";
-import {
-  FullMatchResult,
-  GetMatchResultService
-} from "./services/get-match-result-service";
+import { GetManyMatchResultsServie } from "./services/get-many-match-results-service";
+import { GetMatchResultService } from "./services/get-match-result-service";
 
 export class MatchResultsController {
   get = async (req: Request, res: Response) => {
-    const { id, limit, page } = req.query;
-    let data: FullMatchResult | MatchResultsPage[] | null | undefined = null;
+    const { id } = req.query;
+    let data: unknown = null;
 
     data = id
       ? await new GetMatchResultService().execute(id)
-      : await new GetManyMatchResultsServie().execute({ limit, page });
+      : await new GetManyMatchResultsServie().execute(req.query);
 
     res.json({ success: true, data });
   };
