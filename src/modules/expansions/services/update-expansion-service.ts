@@ -7,8 +7,9 @@ import { uuidSchema } from "../../../lib/uuid-schema";
 const updateExpansionSchema = z
   .object({
     id: uuidSchema,
-  name: z.string()
-});
+    name: z.string().trim().min(1)
+  })
+  .required();
 
 export class UpdateExpansionService {
   async execute(data: unknown) {
