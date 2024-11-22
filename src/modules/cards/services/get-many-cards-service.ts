@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import z from "zod";
 import { db } from "../../../db";
 import {
@@ -6,18 +6,20 @@ import {
   cards,
   pokemonTypesEnum
 } from "../../../db/schema";
+import { uuidSchema } from "../../../lib/uuid-schema";
 
 const getManyCardsSchema = z.object({
   type: z.enum(pokemonTypesEnum.enumValues).optional(),
   category: z.enum(cardCategoriesEnum.enumValues).optional(),
-  expansionId: z.string().uuid().optional(),
+  expansionId: uuidSchema.optional(),
   limit: z.coerce.number(),
-  page: z.coerce.number()
+  page: z.coerce.number(),
+  ascOrder: z.coerce.boolean()
 });
 
 export class GetManyCardsService {
   async execute(data: unknown) {
-    const { type, category, expansionId, limit, page } =
+    const { type, category, expansionId, limit, page, ascOrder } =
       getManyCardsSchema.parse(data);
 
     const rows = await db
@@ -31,7 +33,8 @@ export class GetManyCardsService {
         )
       )
       .offset((page - 1) * limit)
-      .limit(limit);
+      .limit(limit)
+      .orderBy(ascOrder ? cards.createdAt : desc(cards.createdAt));
     return rows;
   }
 }
