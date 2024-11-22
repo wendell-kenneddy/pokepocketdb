@@ -20,5 +20,5 @@ app.use(matchResultsRouter);
 app.use(errorHandlerMiddleware);
 
 app.listen(env.PORT, () => {
-  console.log(`Server running on http://localhost:${env.PORT}`);
+  console.log(`Server running on ${env.API_BASE_URL}:${env.PORT}`);
 });
