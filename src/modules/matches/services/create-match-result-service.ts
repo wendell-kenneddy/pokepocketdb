@@ -1,50 +1,48 @@
 import { createInsertSchema } from "drizzle-zod";
 import z from "zod";
 import { db } from "../../../db";
-import {
-  matchLoserCards,
-  matchResults,
-  matchWinnerCards
-} from "../../../db/schema";
+import { matchCards, matchResults, pokemonTypesEnum } from "../../../db/schema";
+import { uuidSchema } from "../../../lib/uuid-schema";
+
+const zEnergyEnum = z.enum(pokemonTypesEnum.enumValues);
 
 const matchResultSchema = createInsertSchema(matchResults, {
-  winnerEnergies: (s) => z.array(s.winnerEnergies),
-  loserEnergies: (s) => z.array(s.loserEnergies)
+  winnerEnergies: zEnergyEnum
+    .array()
+    .min(1, "Winner's deck must contain at least 1 energy type."),
+  loserEnergies: zEnergyEnum
+    .array()
+    .min(1, "Loser's deck must contain at least 1 energy type.")
 });
-const matchCardSchema = createInsertSchema(matchWinnerCards, {
-  matchId: (s) => s.matchId.optional()
-});
+
 const createMatchResultSchema = z.object({
   matchResult: matchResultSchema,
-  winnerCards: matchCardSchema.array(),
-  loserCards: matchCardSchema.array()
+  winnerDeck: uuidSchema
+    .array()
+    .min(1, "Winner's deck must contain at least 1 card.")
+    .max(20, "A deck can't contain more than 20 cards."),
+  loserDeck: uuidSchema
+    .array()
+    .min(1, "Loser's deck must contain at least 1 card.")
+    .max(20, "A deck can't contain more than 20 cards.")
 });
 
 export class CreateMatchResultService {
   async execute(data: unknown) {
-    const { matchResult, winnerCards, loserCards } =
+    const { matchResult, winnerDeck, loserDeck } =
       createMatchResultSchema.parse(data);
-
-    // optimize this abomination
 
     const matchId = await db.transaction(async (tx) => {
       const [{ id: matchId }] = await tx
         .insert(matchResults)
         .values(matchResult)
         .returning({ id: matchResults.id });
+      const cards = [
+        ...winnerDeck.map((cardId) => ({ cardId, matchId, winnerCard: true })),
+        ...loserDeck.map((cardId) => ({ cardId, matchId, winnerCard: false }))
+      ];
 
-      await tx.insert(matchWinnerCards).values(
-        winnerCards.map((c) => ({
-          cardId: c.cardId,
-          matchId
-        }))
-      );
-      await tx.insert(matchLoserCards).values(
-        loserCards.map((c) => ({
-          cardId: c.cardId,
-          matchId
-        }))
-      );
+      await tx.insert(matchCards).values(cards);
 
       return matchId;
     });
