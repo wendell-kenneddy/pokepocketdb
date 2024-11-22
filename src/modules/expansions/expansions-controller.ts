@@ -15,15 +15,12 @@ export class ExpansionsController {
   };
 
   get = async (req: Request, res: Response) => {
-    const { id, limit, offset } = req.query;
+    const { id } = req.query;
     let data: Expansion | Expansion[] | null = null;
 
     data = id
       ? await new GetExpansionService().execute(id)
-      : await new GetManyExpansionsService().execute({
-          limit,
-          offset
-        });
+      : await new GetManyExpansionsService().execute(req.query);
 
     res.json({ success: true, data });
   };
