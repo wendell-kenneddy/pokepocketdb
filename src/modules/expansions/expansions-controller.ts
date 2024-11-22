@@ -10,8 +10,8 @@ type Expansion = typeof expansions.$inferSelect;
 
 export class ExpansionsController {
   create = async (req: Request, res: Response) => {
-    await new CreateExpansionService().execute(req.body);
-    res.json({ success: true, message: "Expansion created." });
+    const id = await new CreateExpansionService().execute(req.body);
+    res.json({ success: true, message: "Expansion created.", data: id });
   };
 
   get = async (req: Request, res: Response) => {
