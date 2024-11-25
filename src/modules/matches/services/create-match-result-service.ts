@@ -2,6 +2,7 @@ import { createInsertSchema } from "drizzle-zod";
 import z from "zod";
 import { db } from "../../../db";
 import { matchCards, matchResults, pokemonTypesEnum } from "../../../db/schema";
+import { ValidationError } from "../../../errors/validation-error";
 import { uuidSchema } from "../../../lib/uuid-schema";
 
 const zEnergyEnum = z.enum(pokemonTypesEnum.enumValues);
@@ -31,6 +32,7 @@ export class CreateMatchResultService {
   async execute(data: unknown) {
     const { matchResult, winnerDeck, loserDeck } =
       createMatchResultSchema.parse(data);
+    this.validateDecks(winnerDeck, loserDeck);
 
     const matchId = await db.transaction(async (tx) => {
       const [{ id: matchId }] = await tx
@@ -48,5 +50,24 @@ export class CreateMatchResultService {
     });
 
     return matchId;
+  }
+
+  private validateDecks(winnerDeck: string[], loserDeck: string[]) {
+    winnerDeck.reduce<Record<string, number>>((acc, val) => {
+      if (acc[val] == 2)
+        throw new ValidationError(
+          "Winner's deck contain more than two of the same card(s)."
+        );
+      acc[val] = acc[val] ? acc[val] + 1 : 1;
+      return acc;
+    }, {});
+    loserDeck.reduce<Record<string, number>>((acc, val) => {
+      if (acc[val] == 2)
+        throw new Error(
+          "Winner's deck contain more than two of the same card(s)."
+        );
+      acc[val] = acc[val] ? acc[val] + 1 : 1;
+      return acc;
+    }, {});
   }
 }
