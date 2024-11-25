@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { PostgresError } from "postgres";
 import { ZodError } from "zod";
+import { ValidationError } from "../errors/validation-error";
 
 interface ErrorResponse {
   message: string;
@@ -26,13 +27,26 @@ export function errorHandlerMiddleware(
     json.message = "Invalid JSON";
     json.status = 400;
     json.errors = [];
+  } else if (err instanceof ValidationError) {
+    json.message = "Invalid input.";
+    (json.errors as string[]).push(err.message);
   } else if (err instanceof PostgresError) {
     json.message = "Invalid input.";
     json.status = 400;
-    if (err.detail && err.detail.includes("(name, expansion_id)")) {
-      (json.errors as string[]).push(
-        "Card with given name already exists within the given expansion."
-      );
+
+    switch (err.constraint_name) {
+      case "cards_name_expansion_id_unique":
+        (json.errors as string[]).push(
+          "Card with given name already exists within the given expansion."
+        );
+        break;
+      case "expansions_name_unique":
+        (json.errors as string[]).push(
+          "Expansion with given name already exists."
+        );
+        break;
+      default:
+        break;
     }
   } else if (err instanceof ZodError) {
     json.message = "Invalid input";
