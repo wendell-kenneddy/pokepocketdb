@@ -45,6 +45,14 @@ export function errorHandlerMiddleware(
           "Expansion with given name already exists."
         );
         break;
+      case "cards_expansion_id_expansions_id_fk":
+        (json.errors as string[]).push("No expansion found.");
+        break;
+      case "match_cards_card_id_cards_id_fk":
+        (json.errors as string[]).push(
+          "One of the specified cards does not exist."
+        );
+        break;
       default:
         break;
     }
