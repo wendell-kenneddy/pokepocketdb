@@ -14,7 +14,6 @@ WORKDIR /usr/api
 COPY --from=builder /usr/api/dist ./dist
 COPY --from=builder /usr/api/package.json ./
 COPY drizzle.config.ts .
-COPY .env ./
 COPY drizzle ./drizzle
 RUN npm install --production
 ENV NODE_ENV=production
