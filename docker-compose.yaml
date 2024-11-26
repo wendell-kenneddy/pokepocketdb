@@ -23,14 +23,12 @@ services:
     volumes:
       - db-data:/etc/data
     env_file:
-      - db.env
+      - .env
   migrations:
     container_name: migrations
     build:
       context: .
       dockerfile: migrations.Dockerfile
-    ports:
-      - 6000:6000
     depends_on:
       - db
     env_file:
