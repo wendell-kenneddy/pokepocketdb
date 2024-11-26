@@ -1,0 +1,39 @@
+name: pokepocket
+
+services:
+  api:
+    container_name: api
+    build:
+      context: .
+    ports:
+      - 3333:3333
+    depends_on:
+      - db
+      - migrations
+    restart: always
+    env_file:
+      - .env
+  db:
+    container_name: db
+    hostname: postgres
+    image: postgres:latest
+    ports:
+      - 5743:5432
+    restart: always
+    volumes:
+      - db-data:/etc/data
+    env_file:
+      - db.env
+  migrations:
+    container_name: migrations
+    build:
+      context: .
+      dockerfile: migrations.Dockerfile
+    ports:
+      - 6000:6000
+    depends_on:
+      - db
+    env_file:
+      - .env
+volumes:
+  db-data:
