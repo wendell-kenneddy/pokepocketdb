@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { expansions } from "../../db/schema";
+import { AuthorizationError } from "../../errors/authorization-error";
 import { CreateExpansionService } from "./services/create-expansion-service";
 import { DeleteExpansionService } from "./services/delete-expansion-service";
 import { GetExpansionService } from "./services/get-expansion-service";
@@ -10,6 +11,9 @@ type Expansion = typeof expansions.$inferSelect;
 
 export class ExpansionsController {
   create = async (req: Request, res: Response) => {
+    const { userPermissions } = req;
+    if (!userPermissions || !userPermissions.includes("expansions:create"))
+      throw new AuthorizationError();
     const id = await new CreateExpansionService().execute(req.body);
     res.json({ success: true, message: "Expansion created.", data: id });
   };
@@ -26,11 +30,17 @@ export class ExpansionsController {
   };
 
   update = async (req: Request, res: Response) => {
+    const { userPermissions } = req;
+    if (!userPermissions || !userPermissions.includes("expansions:update"))
+      throw new AuthorizationError();
     await new UpdateExpansionService().execute(req.body);
     res.json({ success: true, message: "Expansion updated." });
   };
 
   delete = async (req: Request, res: Response) => {
+    const { userPermissions } = req;
+    if (!userPermissions || !userPermissions.includes("expansions:delete"))
+      throw new AuthorizationError();
     await new DeleteExpansionService().execute(req.query.id);
     res.json({ success: true, message: "Expansion deleted." });
   };
