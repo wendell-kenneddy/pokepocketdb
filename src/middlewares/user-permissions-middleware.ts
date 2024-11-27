@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { GetUserService } from "../modules/users/services/get-user-service";
+import { GetUserPermissionsService } from "../modules/users/services/get-user-permissions-service";
 
 export async function userPermissionsMiddleware(
   req: Request,
@@ -7,7 +7,7 @@ export async function userPermissionsMiddleware(
   next: NextFunction
 ) {
   const { userId } = req;
-  const { permissions } = await new GetUserService().execute(userId);
+  const permissions = await new GetUserPermissionsService().execute(userId);
   req.userPermissions = permissions;
   next();
 }
