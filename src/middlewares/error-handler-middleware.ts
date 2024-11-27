@@ -1,6 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { PostgresError } from "postgres";
 import { ZodError } from "zod";
+import { AuthenticationError } from "../errors/authentication-error";
+import { AuthorizationError } from "../errors/authorization-error";
+import { ClientError } from "../errors/client-error";
 import { ValidationError } from "../errors/validation-error";
 
 interface ErrorResponse {
@@ -15,7 +18,7 @@ export function errorHandlerMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  console.log(err);
+  if (process.env.NODE_ENV == "development") console.log(err);
 
   const json: ErrorResponse = {
     message: "Internal server error.",
@@ -26,9 +29,16 @@ export function errorHandlerMiddleware(
   if (err.message.includes("not valid JSON")) {
     json.message = "Invalid JSON";
     json.status = 400;
-    json.errors = [];
-  } else if (err instanceof ValidationError) {
+  } else if (err instanceof ValidationError || err instanceof ClientError) {
     json.message = "Invalid input.";
+    (json.errors as string[]).push(err.message);
+  } else if (err instanceof AuthenticationError) {
+    json.message = "Unauthenticated access denied.";
+    json.status = 401;
+    (json.errors as string[]).push(err.message);
+  } else if (err instanceof AuthorizationError) {
+    json.message = "Unauthorized access denied.";
+    json.status = 403;
     (json.errors as string[]).push(err.message);
   } else if (err instanceof PostgresError) {
     json.message = "Invalid input.";
@@ -51,6 +61,14 @@ export function errorHandlerMiddleware(
       case "match_cards_card_id_cards_id_fk":
         (json.errors as string[]).push(
           "One of the specified cards does not exist."
+        );
+        break;
+      case "roles_name_unique":
+        (json.errors as string[]).push("Role with given name already exists.");
+        break;
+      case "users_email_unique":
+        (json.errors as string[]).push(
+          "User with given e-mail alreday exists."
         );
         break;
       default:
