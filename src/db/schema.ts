@@ -28,6 +28,47 @@ export const cardCategoriesEnum = pgEnum("card_categories", [
   "support"
 ]);
 
+export const rolePermissionsEnum = pgEnum("role_permissions", [
+  "expansions:create",
+  "expansions:read",
+  "expansions:update",
+  "expansions:delete",
+  "cards:create",
+  "cards:read",
+  "cards:update",
+  "cards:delete",
+  "matches:create",
+  "matches:read",
+  "matches:update",
+  "matches:delete",
+  "users:create",
+  "users:read",
+  "users:update",
+  "users:delete",
+  "roles:create",
+  "roles:read",
+  "roles:update",
+  "roles:delete"
+]);
+
+export const roles = pgTable("roles", {
+  id: text("id").primaryKey().$defaultFn(createId),
+  name: text("name").unique().notNull(),
+  permissions: rolePermissionsEnum("permissions").array().notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow()
+});
+
+export const users = pgTable("users", {
+  id: text("id").primaryKey().$defaultFn(createId),
+  email: text("email").unique().notNull(),
+  name: text("name").notNull(),
+  password: text("password").notNull(),
+  roleId: text("role_id")
+    .notNull()
+    .references(() => roles.id),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow()
+});
+
 export const expansions = pgTable("expansions", {
   id: text("id").primaryKey().$defaultFn(createId),
   name: text("name").notNull().unique(),
