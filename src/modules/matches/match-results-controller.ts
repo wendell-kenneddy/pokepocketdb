@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { AuthorizationError } from "../../errors/authorization-error";
 import { CreateMatchResultService } from "./services/create-match-result-service";
 import { DeleteMatchResultService } from "./services/delete-match-result-service";
 import { GetManyMatchResultsServie } from "./services/get-many-match-results-service";
@@ -17,12 +18,18 @@ export class MatchResultsController {
   };
 
   create = async (req: Request, res: Response) => {
+    const { userPermissions } = req;
+    if (!userPermissions || !userPermissions.includes("matches:create"))
+      throw new AuthorizationError();
     const data = req.body;
     const matchId = await new CreateMatchResultService().execute(data);
     res.json({ success: true, message: "Match result created.", matchId });
   };
 
   delete = async (req: Request, res: Response) => {
+    const { userPermissions } = req;
+    if (!userPermissions || !userPermissions.includes("matches:delete"))
+      throw new AuthorizationError();
     const { id } = req.query;
     await new DeleteMatchResultService().execute(id);
     res.json({ success: true, message: "Match result deleted." });
