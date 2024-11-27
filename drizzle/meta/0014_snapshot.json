@@ -1,0 +1,481 @@
+{
+  "id": "97176873-7d8c-449d-9a4a-4e48bab8f549",
+  "prevId": "9f2acc96-6f47-4d5a-a27c-535298f1e57d",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.cards": {
+      "name": "cards",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category": {
+          "name": "category",
+          "type": "card_categories",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "card_types",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "expansion_id": {
+          "name": "expansion_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "cards_expansion_id_expansions_id_fk": {
+          "name": "cards_expansion_id_expansions_id_fk",
+          "tableFrom": "cards",
+          "tableTo": "expansions",
+          "columnsFrom": [
+            "expansion_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "cards_name_expansion_id_unique": {
+          "name": "cards_name_expansion_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name",
+            "expansion_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.expansions": {
+      "name": "expansions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "expansions_name_unique": {
+          "name": "expansions_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.match_cards": {
+      "name": "match_cards",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "match_id": {
+          "name": "match_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "card_id": {
+          "name": "card_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_card": {
+          "name": "winner_card",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "match_cards_match_id_match_results_id_fk": {
+          "name": "match_cards_match_id_match_results_id_fk",
+          "tableFrom": "match_cards",
+          "tableTo": "match_results",
+          "columnsFrom": [
+            "match_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "match_cards_card_id_cards_id_fk": {
+          "name": "match_cards_card_id_cards_id_fk",
+          "tableFrom": "match_cards",
+          "tableTo": "cards",
+          "columnsFrom": [
+            "card_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.match_results": {
+      "name": "match_results",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "turns": {
+          "name": "turns",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_comeback": {
+          "name": "winner_comeback",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_name": {
+          "name": "winner_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_points": {
+          "name": "winner_points",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_coin_first": {
+          "name": "winner_coin_first",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_type_advantage": {
+          "name": "winner_type_advantage",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_type_disadvantage": {
+          "name": "winner_type_disadvantage",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_energies": {
+          "name": "winner_energies",
+          "type": "card_types[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_level": {
+          "name": "winner_level",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loser_level": {
+          "name": "loser_level",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loser_name": {
+          "name": "loser_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loser_concede": {
+          "name": "loser_concede",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loser_points": {
+          "name": "loser_points",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loser_energies": {
+          "name": "loser_energies",
+          "type": "card_types[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.roles": {
+      "name": "roles",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permissions": {
+          "name": "permissions",
+          "type": "role_permissions[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "roles_name_unique": {
+          "name": "roles_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role_id": {
+          "name": "role_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_role_id_roles_id_fk": {
+          "name": "users_role_id_roles_id_fk",
+          "tableFrom": "users",
+          "tableTo": "roles",
+          "columnsFrom": [
+            "role_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.card_categories": {
+      "name": "card_categories",
+      "schema": "public",
+      "values": [
+        "pokemon",
+        "item",
+        "support"
+      ]
+    },
+    "public.card_types": {
+      "name": "card_types",
+      "schema": "public",
+      "values": [
+        "colorless",
+        "fire",
+        "water",
+        "grass",
+        "fighting",
+        "metal",
+        "psychic",
+        "darkness",
+        "lightning",
+        "dragon"
+      ]
+    },
+    "public.role_permissions": {
+      "name": "role_permissions",
+      "schema": "public",
+      "values": [
+        "expansions:create",
+        "expansions:read",
+        "expansions:update",
+        "expansions:delete",
+        "cards:create",
+        "cards:read",
+        "cards:update",
+        "cards:delete",
+        "matches:create",
+        "matches:read",
+        "matches:update",
+        "matches:delete",
+        "users:create",
+        "users:read",
+        "users:update",
+        "users:delete"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
