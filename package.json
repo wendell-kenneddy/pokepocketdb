@@ -10,6 +10,7 @@
     "dev": "tsx watch --env-file=.env src/server.ts",
     "migrate": "npx drizzle-kit migrate",
     "start": "node dist/index.js",
+    "seed": "tsx src/db/seed.ts",
     "build": "esbuild src/server.ts --target=es6 --outfile=dist/index.js --minify --bundle --platform=node --packages=external"
   },
   "devDependencies": {
