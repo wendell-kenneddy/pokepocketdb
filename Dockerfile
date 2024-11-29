@@ -1,23 +1,26 @@
-FROM node:20-alpine AS builder
+FROM node:20-alpine AS base
 WORKDIR /usr/api
 
-COPY package.json ./
-COPY package-lock.json ./
+COPY package.json .
+COPY package-lock.json .
 COPY drizzle.config.ts .
+COPY drizzle ./drizzle
 COPY src ./src
 RUN npm install
+
+FROM base AS builder
+WORKDIR /usr/api
+
 RUN npm run build
 
-FROM node:21-alpine
+FROM node:20-alpine AS runner
 WORKDIR /usr/api
 
 COPY --from=builder /usr/api/dist ./dist
 COPY --from=builder /usr/api/package.json ./
 COPY drizzle.config.ts .
-COPY drizzle ./drizzle
 RUN npm install --production
-ENV NODE_ENV=production
-
 EXPOSE 3333
+ENV NODE_ENV=production
 
 CMD [ "npm", "run", "start" ]
