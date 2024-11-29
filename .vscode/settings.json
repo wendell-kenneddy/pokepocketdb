@@ -1,6 +1,5 @@
 {
   "editor.codeActionsOnSave": {
-    "source.sortImports": "always",
-    "source.removeUnusedImports": "always"
+    "source.sortImports": "always"
   }
 }
