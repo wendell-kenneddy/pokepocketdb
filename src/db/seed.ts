@@ -1,4 +1,4 @@
-import { hash } from "bcrypt";
+import { genSaltSync, hashSync } from "bcrypt";
 import { db } from ".";
 import { roles, users } from "./schema";
 
@@ -38,9 +38,9 @@ async function main() {
     ]
   };
   const admin: UserInsert = {
-    name: "<name>",
-    password: await hash("<password>", 10),
-    email: "<email_address>",
+    name: String(process.env.ADMIN_NAME),
+    password: hashSync(String(process.env.ADMIN_PASSWORD), genSaltSync(10)),
+    email: String(process.env.ADMIN_EMAIL),
     roleId: ""
   };
   await db.transaction(async (tx) => {
