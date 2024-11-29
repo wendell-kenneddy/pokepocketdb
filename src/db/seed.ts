@@ -1,5 +1,5 @@
 import { genSaltSync, hashSync } from "bcrypt";
-import { db } from ".";
+import { client, db } from ".";
 import { roles, users } from "./schema";
 
 type RoleInsert = typeof roles.$inferInsert;
@@ -52,7 +52,8 @@ async function main() {
     console.log("[SEED]: creating root user");
     await tx.insert(users).values({ ...admin, roleId: roleIds[1].id });
   });
+  await client.end();
+  console.log("[SEED]: done");
 }
 
 main();
-console.log("[SEED]: done");
