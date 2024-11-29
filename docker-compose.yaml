@@ -5,11 +5,12 @@ services:
     container_name: api
     build:
       context: .
+      dockerfile: backend.Dockerfile
       # target: base
     develop:
       watch:
         - action: sync
-          path: ./src
+          path: ./backend/src
           target: /usr/api/src
           ignore:
             - node_modules
@@ -19,10 +20,10 @@ services:
       - 3333:3333
     depends_on:
       - db
-      - setup
+      - backend-setup
     restart: always
     env_file:
-      - .env
+      - ./backend/.env
   db:
     container_name: db
     hostname: postgres
@@ -38,17 +39,18 @@ services:
     volumes:
       - db-data:/etc/data
     env_file:
-      - .env
-  setup:
-    container_name: setup
+      - ./backend/.env
+  backend-setup:
+    container_name: backend-setup
     build:
       context: .
+      dockerfile: backend.Dockerfile
       target: base
     command: ["sh", "-c", "npm run migrate && npm run seed"]
     depends_on:
       db:
         condition: service_healthy
     env_file:
-      - .env
+      - ./backend/.env
 volumes:
   db-data:
