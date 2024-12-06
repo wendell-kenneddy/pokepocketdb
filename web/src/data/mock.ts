@@ -1,4 +1,4 @@
-import { ShortMatchResult } from "./types";
+import { CardData, FullMatchResult, ShortMatchResult } from "./types";
 
 export const mockMatchResults: ShortMatchResult[] = [
   {
@@ -82,3 +82,210 @@ export const mockMatchResults: ShortMatchResult[] = [
     turns: 7,
   },
 ];
+
+export const mockWinnerDeck: CardData[] = [
+  {
+    id: "1",
+    name: "Mewtwo EX",
+    category: "pokemon",
+    type: "psychic",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "2",
+    name: "Mewtwo EX",
+    category: "pokemon",
+    type: "psychic",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "3",
+    name: "Ralts",
+    category: "pokemon",
+    type: "psychic",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "4",
+    name: "Ralts",
+    category: "pokemon",
+    type: "psychic",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "5",
+    name: "Kirlia",
+    category: "pokemon",
+    type: "psychic",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "6",
+    name: "Kirlia",
+    category: "pokemon",
+    type: "psychic",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "7",
+    name: "Gardevoir",
+    category: "pokemon",
+    type: "psychic",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "8",
+    name: "Gardevoir",
+    category: "pokemon",
+    type: "psychic",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "9",
+    name: "Sabrina",
+    category: "support",
+    type: null,
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "10",
+    name: "Sabrina",
+    category: "support",
+    type: null,
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "11",
+    name: "Giovanni",
+    category: "support",
+    type: null,
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "12",
+    name: "Giovanni",
+    category: "support",
+    type: null,
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "13",
+    name: "Professor's Research",
+    category: "support",
+    type: null,
+    expansion: "Promo-A",
+  },
+  {
+    id: "14",
+    name: "Professor's Research",
+    category: "support",
+    type: null,
+    expansion: "Promo-A",
+  },
+  {
+    id: "15",
+    name: "Potion",
+    category: "item",
+    type: null,
+    expansion: "Promo-A",
+  },
+  {
+    id: "16",
+    name: "Potion",
+    category: "item",
+    type: null,
+    expansion: "Promo-A",
+  },
+  {
+    id: "17",
+    name: "Poké Ball",
+    category: "item",
+    type: null,
+    expansion: "Promo-A",
+  },
+  {
+    id: "18",
+    name: "Poké Ball",
+    category: "item",
+    type: null,
+    expansion: "Promo-A",
+  },
+  {
+    id: "19",
+    name: "X Speed",
+    category: "item",
+    type: null,
+    expansion: "Promo-A",
+  },
+  {
+    id: "20",
+    name: "Red Card",
+    category: "item",
+    type: null,
+    expansion: "Promo-A",
+  },
+];
+
+export const mockLoserDeck: CardData[] = [
+  {
+    id: "21",
+    name: "Charmander",
+    category: "pokemon",
+    type: "fire",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "22",
+    name: "Charmander",
+    category: "pokemon",
+    type: "fire",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "23",
+    name: "Charmeleon",
+    category: "pokemon",
+    type: "fire",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "24",
+    name: "Charmeleon",
+    category: "pokemon",
+    type: "fire",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "25",
+    name: "Charizard EX",
+    category: "pokemon",
+    type: "fire",
+    expansion: "Genetic Apex",
+  },
+  {
+    id: "26",
+    name: "Charizard EX",
+    category: "pokemon",
+    type: "fire",
+    expansion: "Genetic Apex",
+  },
+];
+
+export const mockFullMatchResult: FullMatchResult = {
+  id: "123",
+  winnerName: "Shaka",
+  winnerEnergies: ["psychic"],
+  winnerCoinFirst: true,
+  winnerPoints: 1,
+  winnerLevel: 31,
+  winnerTypeAdvantage: false,
+  winnerTypeDisadvantage: true,
+  winnerDeck: mockWinnerDeck,
+  loserName: "Kin",
+  loserEnergies: ["fire"],
+  loserPoints: 1,
+  loserLevel: 29,
+  turns: 7,
+  loserConcede: true,
+  loserDeck: mockLoserDeck,
+};
