@@ -17,7 +17,7 @@ export type MatchResultsPage = Pick<
   | "winnerEnergies"
   | "loserName"
   | "loserEnergies"
-  | "loserConcede"
+  | "turns"
 >;
 
 export class GetManyMatchResultsServie {
@@ -30,9 +30,7 @@ export class GetManyMatchResultsServie {
         winnerName: matchResults.winnerName,
         winnerEnergies: matchResults.winnerEnergies,
         loserName: matchResults.loserName,
-        loserEnergies: matchResults.loserEnergies,
-        loserConcede: matchResults.loserConcede,
-        createdAt: matchResults.createdAt
+        loserEnergies: matchResults.loserEnergies
       })
       .from(matchResults)
       .limit(limit)
