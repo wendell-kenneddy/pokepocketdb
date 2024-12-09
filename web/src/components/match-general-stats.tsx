@@ -21,8 +21,8 @@ export function MatchGeneralStats({
   }
 
   return (
-    <div className="w-full max-w-[720px] overflow-x-auto">
-      <section className="flex items-center gap-4">
+    <div className="w-full max-w-[336px] xs:max-w-[394px] sm:max-w-[500px] md:max-w-[720px] overflow-x-auto">
+      <section className="flex items-center gap-2">
         <h2 className="sr-only">Match general stats</h2>
         <Badge variant="winner">Winner went {winnerCoinFirst ? "first" : "second"}</Badge>
         {(winnerTypeAdvantage || winnerTypeDisadvantage) && (
