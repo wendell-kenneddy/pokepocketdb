@@ -4,9 +4,11 @@ import { roles, users } from "../../../db/schema";
 import { uuidSchema } from "../../../lib/uuid-schema";
 
 type User = typeof users.$inferSelect;
+
 export interface UserWithPermissions
   extends Omit<User, "password" | "createdAt" | "roleId"> {
   role: string | null;
+  permissions: string[];
 }
 
 export class GetUserService {
@@ -17,7 +19,8 @@ export class GetUserService {
         id: users.id,
         name: users.name,
         email: users.email,
-        role: roles.name
+        role: roles.name,
+        permissions: roles.permissions
       })
       .from(users)
       .innerJoin(roles, eq(users.roleId, roles.id))
