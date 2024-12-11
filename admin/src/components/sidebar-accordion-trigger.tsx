@@ -17,7 +17,7 @@ export const SidebarAccordionTrigger = forwardRef(
 
     return (
       <AccordionTrigger
-        className={`flex items-center gap-4 ${textCss}`}
+        className={`flex items-center gap-4 ${textCss} uppercase text-sm`}
         {...props}
         ref={forwardedRef}
       >
