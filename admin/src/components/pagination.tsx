@@ -18,7 +18,7 @@ export function Pagination({
   return (
     <div className="bg-gray-900 border-t border-t-teal-400 py-1 px-4 rounded-b-md w-full flex items-center justify-between">
       <button
-        className="disabled:cursor-not-allowed"
+        className="disabled:cursor-not-allowed disabled:opacity-50"
         name="View previous 10 match results"
         onClick={getPrevPage}
         disabled={!canGoBack}
@@ -29,7 +29,7 @@ export function Pagination({
       <span about="Current match results page">{page}</span>
 
       <button
-        className="disabled:cursor-not-allowed"
+        className="disabled:cursor-not-allowed disabled:opacity-50"
         name="View next 10 match results"
         onClick={getNextPage}
         disabled={!canGoForward}
