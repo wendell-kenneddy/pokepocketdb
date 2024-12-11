@@ -15,7 +15,7 @@ export function SidebarLink({ children, href }: SidebarLinkProps) {
     pathname == href ? "text-teal-400 font-medium" : "text-gray-100/50 hover:text-gray-100";
 
   return (
-    <Link href={href} className={`${styles} text-sm`}>
+    <Link href={href} className={`${styles} text-xs uppercase`}>
       {children}
     </Link>
   );
