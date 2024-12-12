@@ -33,15 +33,6 @@ export function Sidebar() {
               <SidebarLink href="/dashboard/matches/create">Create match result</SidebarLink>
             </Accordion.Content>
           </Accordion.Item>
-
-          <Accordion.Item value="users">
-            <SidebarAccordionTrigger path="/users">Users</SidebarAccordionTrigger>
-
-            <Accordion.Content className="flex mt-1 flex-col items-start gap-1">
-              <SidebarLink href="/dashboard/users">View users</SidebarLink>
-              <SidebarLink href="/dashboard/users/create">Create user</SidebarLink>
-            </Accordion.Content>
-          </Accordion.Item>
         </nav>
       </Accordion.Root>
     </aside>
