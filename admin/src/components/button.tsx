@@ -2,7 +2,7 @@ import { ComponentProps } from "react";
 import { tv, type VariantProps } from "tailwind-variants";
 
 const buttonStyles = tv({
-  base: "flex items-center justify-center py-2 px-4 font-medium cursor-pointer hover:opacity-70",
+  base: "flex items-center justify-center py-2 px-4 font-medium cursor-pointer [&:not(:disabled)]:hover:opacity-70 disabled:opacity-50 disabled:cursor-not-allowed",
   variants: {
     colorScheme: {
       primary: "bg-teal-400",
