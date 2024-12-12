@@ -2,12 +2,16 @@ import { ComponentProps, InputHTMLAttributes } from "react";
 
 interface FormControlProps extends ComponentProps<"input"> {
   labelFor: string;
+  labelVisible?: boolean;
 }
 
-export function FormControl({ children, labelFor, ...props }: FormControlProps) {
+export function FormControl({ children, labelFor, labelVisible, ...props }: FormControlProps) {
+  const labelStyles = labelVisible ? "text-start" : "sr-only";
+  const containerStyles = labelVisible ? "w-full grid grid-cols-[30%_70%] items-center" : "w-full";
+
   return (
-    <div className="w-full">
-      <label htmlFor={labelFor} className="sr-only">
+    <div className={containerStyles}>
+      <label htmlFor={labelFor} className={labelStyles}>
         {children}
       </label>
 
