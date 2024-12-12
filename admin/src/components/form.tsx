@@ -1,4 +1,4 @@
-import { ComponentProps, FormHTMLAttributes } from "react";
+import { type ComponentProps } from "react";
 
 interface FormProps extends ComponentProps<"form"> {}
 
