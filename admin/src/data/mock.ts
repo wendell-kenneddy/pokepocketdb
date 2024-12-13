@@ -74,7 +74,7 @@ export const mockPokemonTypes: SelectOption[] = [
 
 export const select_mockCardExpansions: SelectOption[] = mockExpansions.map(({ name }) => ({
   displayValue: name,
-  value: name.split(" ").join("-"),
+  value: name,
 }));
 
 export const mockUserRoles: SelectOption[] = [
