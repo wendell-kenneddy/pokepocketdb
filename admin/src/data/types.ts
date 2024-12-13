@@ -1,3 +1,5 @@
+export type SearchParams = { [key: string]: string | string[] | undefined };
+
 export type CardCategory = "pokemon" | "support" | "item";
 
 export type PokemonType =
