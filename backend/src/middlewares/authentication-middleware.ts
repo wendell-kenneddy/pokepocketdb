@@ -12,6 +12,7 @@ import {
   JWTHandler,
   refreshTokenKey
 } from "../lib/jwt-handler";
+import { redisClient } from "../lib/redis";
 
 export async function authenticationMiddleware(
   req: Request,
@@ -44,18 +45,25 @@ export async function authenticationMiddleware(
         throw new AuthenticationError("No Refresh Token provided.");
 
       try {
-        const refreshTokenVerification = await jwtVerify<{ userId: string }>(
-          refreshToken,
-          refreshTokenKey
-        );
+        const refreshTokenVerification = await jwtVerify<{
+          userId: string;
+          jti: string;
+        }>(refreshToken, refreshTokenKey);
+        const { payload } = refreshTokenVerification;
+        const blacklistedRefreshToken = await redisClient.get(payload.jti);
+        if (blacklistedRefreshToken) throw new JWTInvalid("AAAAA");
+
         const jwtHandler = new JWTHandler();
         const newAccessToken = await jwtHandler.generateAccessToken(
-          refreshTokenVerification.payload.userId
+          payload.userId
         );
         const newRefreshToken = await jwtHandler.generateRefreshToken(
-          refreshTokenVerification.payload.userId
+          payload.userId
         );
 
+        await redisClient.set(payload.jti, newRefreshToken, {
+          EXAT: payload.exp
+        });
         res.setHeader("authorization", `Bearer ${newAccessToken}`);
         res.cookie("refresh-token", newRefreshToken, {
           httpOnly: true,
