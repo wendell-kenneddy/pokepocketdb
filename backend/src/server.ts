@@ -12,6 +12,7 @@ import { expansionsRouter } from "./modules/expansions/expansions-router";
 import { matchResultsRouter } from "./modules/matches/match-results-router";
 import { rolesRouter } from "./modules/roles/roles-router";
 import { usersRouter } from "./modules/users/users-router";
+import { redisClient } from "./lib/redis";
 
 const app = express();
 const limiter = rateLimit({
@@ -33,6 +34,11 @@ app.use(usersRouter);
 app.use(rolesRouter);
 app.use(errorHandlerMiddleware);
 
-app.listen(env.PORT, () => {
-  console.log(`Server running on ${env.API_BASE_URL}:${env.PORT}`);
-});
+redisClient
+  .connect()
+  .then(() => {
+    app.listen(env.PORT, () => {
+      console.log(`Server running on ${env.API_BASE_URL}:${env.PORT}`);
+    });
+  })
+  .catch((e) => console.log(e));
