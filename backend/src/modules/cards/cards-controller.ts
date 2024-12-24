@@ -6,6 +6,8 @@ import { DeleteCardService } from "./services/delete-card-service";
 import { GetCardService } from "./services/get-card-service";
 import { GetManyCardsService } from "./services/get-many-cards-service";
 import { UpdateCardService } from "./services/update-card-service";
+import { GetCardCategoriesService } from "./services/get-card-categories-service";
+import { GetPokemonTypesService } from "./services/get-pokemon-types-service";
 
 type Card = typeof cards.$inferSelect;
 
@@ -27,6 +29,22 @@ export class CardsController {
       : await new GetManyCardsService().execute(req.query);
 
     res.json({ success: true, data });
+  };
+
+  getCategories = async (req: Request, res: Response) => {
+    const { userPermissions } = req;
+    if (!userPermissions || !userPermissions.includes("cards:read"))
+      throw new AuthorizationError();
+    const categories = new GetCardCategoriesService().execute();
+    res.json({ success: true, data: categories });
+  };
+
+  getPokemonTypes = async (req: Request, res: Response) => {
+    const { userPermissions } = req;
+    if (!userPermissions || !userPermissions.includes("cards:read"))
+      throw new AuthorizationError();
+    const types = new GetPokemonTypesService().execute();
+    res.json({ success: true, data: types });
   };
 
   update = async (req: Request, res: Response) => {
