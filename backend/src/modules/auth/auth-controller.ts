@@ -6,8 +6,10 @@ export class AuthController {
   login = async (req: Request, res: Response) => {
     const jwtHandler = new JWTHandler();
     const userId = await new LoginService().execute(req.body);
-    const accessToken = await jwtHandler.generateAccessToken(userId);
-    const refreshToken = await jwtHandler.generateRefreshToken(userId);
+    const [accessToken, refreshToken] = await Promise.all([
+      jwtHandler.generateAccessToken(userId),
+      jwtHandler.generateRefreshToken(userId)
+    ]);
     res.setHeader("authorization", `Bearer ${accessToken}`);
     res.cookie("refresh-token", refreshToken, {
       httpOnly: true,
