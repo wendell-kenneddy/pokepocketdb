@@ -77,9 +77,7 @@ export function errorHandlerMiddleware(
   } else if (err instanceof ZodError) {
     json.message = "Invalid input";
     json.status = 400;
-    json.errors = err.flatten().formErrors.length
-      ? err.flatten().formErrors
-      : err.flatten().fieldErrors;
+    json.errors = err.issues.map((i) => i.message);
   }
 
   res
