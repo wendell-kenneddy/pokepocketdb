@@ -7,10 +7,15 @@ const usersController = new UsersController();
 const usersRouter = Router();
 
 usersRouter.get(
+  "/users/profile",
+  authenticationMiddleware,
+  usersController.getProfile
+);
+usersRouter.get(
   "/users",
   authenticationMiddleware,
   userPermissionsMiddleware,
-  usersController.get
+  usersController.getManyUsers
 );
 usersRouter.post(
   "/users",
