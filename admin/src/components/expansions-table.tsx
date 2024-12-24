@@ -1,3 +1,4 @@
+import { formatDate } from "@/lib/format-date";
 import { Button } from "./button";
 import { ExpansionToDelete } from "./expansions-content";
 import { TableData } from "./table-data";
@@ -24,7 +25,7 @@ export function ExpansionsTable({ expansions, handleDelete }: ExansionsTableProp
         {expansions.map((e) => (
           <tr className="w-full" key={e.id}>
             <TableData>{e.name}</TableData>
-            <TableData>{e.createdAt}</TableData>
+            <TableData>{formatDate(e.createdAt)}</TableData>
             <TableData>
               <Button
                 w="max"
