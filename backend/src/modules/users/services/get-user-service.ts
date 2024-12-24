@@ -19,12 +19,12 @@ export class GetUserService {
         id: users.id,
         name: users.name,
         email: users.email,
-        role: roles.name,
-        permissions: roles.permissions
+        role: roles.name
       })
       .from(users)
       .innerJoin(roles, eq(users.roleId, roles.id))
-      .where(eq(users.id, parsedUserId));
+      .where(eq(users.id, parsedUserId))
+      .limit(1);
     return rows[0];
   }
 }
