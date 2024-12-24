@@ -2,51 +2,55 @@
 
 import { ShortMatchResult } from "@/data/types";
 import { MatchResultsTable } from "./match-results-table";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Pagination } from "./pagination";
 import { ResourceDeleteDialog } from "./resource-delete-dialog";
+import { useRouter } from "next/navigation";
+import { deleteMatchAction } from "@/actions/delete-match-action";
 
 interface MatchesContentProps {
-  initialMatchResults: ShortMatchResult[];
+  matchResults: ShortMatchResult[];
+  page: number;
 }
 
-export function MatchesContent({ initialMatchResults }: MatchesContentProps) {
-  const [matchResults, setMatchResults] = useState<ShortMatchResult[]>(initialMatchResults);
+export function MatchesContent({ matchResults, page }: MatchesContentProps) {
+  const [pending, startTransition] = useTransition();
+  const router = useRouter();
   const [matchResultToDelete, setMatchResultToDelete] = useState<ShortMatchResult | null>(null);
-  const [page, setPage] = useState<number>(1);
 
-  function handleMatchResultDelete(matchResult: ShortMatchResult) {
+  function openDeleteMatchResultDialog(matchResult: ShortMatchResult) {
     setMatchResultToDelete(matchResult);
+  }
+
+  function handleDeleteMatchResult() {
+    const newPage = matchResults.length == 1 ? (page == 1 ? page : page - 1) : page;
+    startTransition(async () => {
+      await deleteMatchAction.bind(null, matchResultToDelete?.id as string)();
+      setMatchResultToDelete(null);
+    });
+    router.push(`/dashboard/matches?page=${newPage}`);
   }
 
   function handleMatchResultDeleteDialogOpenChange(open: boolean) {
     if (!open) setMatchResultToDelete(null);
   }
 
-  function getPrevPage() {
-    setPage((prev) => prev - 1);
-  }
-
-  function getNextPage() {
-    setPage((prev) => prev + 1);
-  }
-
   return (
     <>
-      <MatchResultsTable matchResults={matchResults} onDelete={handleMatchResultDelete} />
+      <MatchResultsTable matchResults={matchResults} onDelete={openDeleteMatchResultDialog} />
 
       <Pagination
+        basePath="/dashboard/matches"
         page={page}
-        getNextPage={getNextPage}
-        getPrevPage={getPrevPage}
         canGoBack={page > 1}
         canGoForward={matchResults.length == 10}
       />
 
       <ResourceDeleteDialog
         open={!!matchResultToDelete}
+        pending={pending}
         onOpenChange={handleMatchResultDeleteDialogOpenChange}
-        onConfirmClick={() => setMatchResultToDelete(null)}
+        onConfirmClick={handleDeleteMatchResult}
         title={`Delete match result?`}
       />
     </>
