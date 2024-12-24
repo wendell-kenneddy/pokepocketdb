@@ -7,17 +7,19 @@ interface Item {
 }
 
 interface RadioGroupProps {
+  name: string;
   defaultValue: string;
   ariaLabel: string;
   items: Item[];
 }
 
-export function RadioGroup({ defaultValue, ariaLabel, items }: RadioGroupProps) {
+export function RadioGroup({ name, defaultValue, ariaLabel, items }: RadioGroupProps) {
   return (
     <RadixRadioGroup.Root
       defaultValue={defaultValue}
       aria-label={ariaLabel}
-      className="w-full flex items-center justify-center gap-4"
+      className="w-full flex items-center justify-between"
+      name={name}
     >
       {items.map(({ id, value, displayValue }) => (
         <div key={id} className="flex items-center gap-2">
