@@ -18,7 +18,7 @@ export function PlayerDeckCard({ onCardRemove, variant, ...card }: CardProps) {
   const { id, name, category, count, expansion, type } = card;
 
   return (
-    <div className="min-w-64">
+    <div className="min-w-64" data-card-id={id}>
       <div
         className={`border-b ${VARIANTS_ENUM[variant]} h-8 px-4 flex items-center justify-center bg-gray-900`}
       >
