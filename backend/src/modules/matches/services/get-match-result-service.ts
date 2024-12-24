@@ -18,6 +18,9 @@ export class GetMatchResultService {
         .select({
           cardId: matchCards.cardId,
           cardName: cards.name,
+          category: cards.category,
+          type: cards.type,
+          count: matchCards.count,
           winnerCard: matchCards.winnerCard
         })
         .from(matchCards)
@@ -32,6 +35,9 @@ export class GetMatchResultService {
               JSON_BUILD_OBJECT(
                 'cardId', ${utilizedCards.cardId},
                 'cardName', ${utilizedCards.cardName},
+                'category', ${utilizedCards.category},
+                'type', ${utilizedCards.type},
+                'count', ${utilizedCards.count},
                 'winnerCard', ${utilizedCards.winnerCard}
               )
             )
@@ -48,6 +54,9 @@ export class GetMatchResultService {
               JSON_BUILD_OBJECT(
                 'cardId', ${utilizedCards.cardId},
                 'cardName', ${utilizedCards.cardName},
+                'category', ${utilizedCards.category},
+                'type', ${utilizedCards.type},
+                'count', ${utilizedCards.count},
                 'winnerCard', ${utilizedCards.winnerCard}
               )
             )
