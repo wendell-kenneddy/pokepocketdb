@@ -9,6 +9,12 @@ import {
   unique
 } from "drizzle-orm/pg-core";
 
+export const playerAdvantagesEnum = pgEnum("player_advantages", [
+  "winner_advantage",
+  "loser_advantage",
+  "neutral"
+]);
+
 export const pokemonTypesEnum = pgEnum("card_types", [
   "colorless",
   "fire",
@@ -99,8 +105,7 @@ export const matchResults = pgTable("match_results", {
   winnerName: text("winner_name").notNull(),
   winnerPoints: integer("winner_points").notNull(),
   winnerCoinFirst: boolean("winner_coin_first").notNull(),
-  winnerTypeAdvantage: boolean("winner_type_advantage").notNull(),
-  winnerTypeDisadvantage: boolean("winner_type_disadvantage").notNull(),
+  advantages: playerAdvantagesEnum("advantages").notNull(),
   winnerEnergies: pokemonTypesEnum("winner_energies").array().notNull(),
   winnerLevel: integer("winner_level").notNull(),
   loserLevel: integer("loser_level").notNull(),
@@ -120,5 +125,6 @@ export const matchCards = pgTable("match_cards", {
     .notNull()
     .references(() => cards.id, { onDelete: "cascade" }),
   winnerCard: boolean("winner_card").notNull(),
+  count: integer("count").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow()
 });
