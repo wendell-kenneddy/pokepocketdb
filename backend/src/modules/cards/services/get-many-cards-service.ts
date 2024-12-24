@@ -1,9 +1,10 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, getTableColumns } from "drizzle-orm";
 import z from "zod";
 import { db } from "../../../db";
 import {
   cardCategoriesEnum,
   cards,
+  expansions,
   pokemonTypesEnum
 } from "../../../db/schema";
 import { uuidSchema } from "../../../lib/uuid-schema";
@@ -23,8 +24,12 @@ export class GetManyCardsService {
       getManyCardsSchema.parse(data);
 
     const rows = await db
-      .select()
+      .select({
+        ...getTableColumns(cards),
+        expansion: expansions.name
+      })
       .from(cards)
+      .innerJoin(expansions, eq(cards.expansionId, expansions.id))
       .where(
         and(
           category ? eq(cards.category, category) : undefined,
