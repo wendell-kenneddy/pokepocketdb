@@ -2,27 +2,22 @@ import { Request, Response } from "express";
 import { AuthorizationError } from "../../errors/authorization-error";
 import { CreateUserService } from "./services/create-user-service";
 import { DeleteUserService } from "./services/delete-user-service";
-import {
-  GetManyUsersService,
-  UserWithRole
-} from "./services/get-many-users-service";
-import {
-  GetUserService,
-  UserWithPermissions
-} from "./services/get-user-service";
+import { GetManyUsersService } from "./services/get-many-users-service";
+import { GetUserService } from "./services/get-user-service";
 
 export class UsersController {
-  get = async (req: Request, res: Response) => {
-    let data: UserWithPermissions | UserWithRole[] | null = null;
+  getProfile = async (req: Request, res: Response) => {
+    const { userId } = req;
+    const data = await new GetUserService().execute(userId);
+    res.json({ success: true, data });
+  };
 
-    if (req.query.limit) {
-      const { userPermissions } = req;
-      if (!userPermissions || !userPermissions.includes("users:read"))
-        throw new AuthorizationError();
-      data = await new GetManyUsersService().execute(req.query);
-    } else {
-      data = await new GetUserService().execute(req.userId);
-    }
+  getManyUsers = async (req: Request, res: Response) => {
+    const { userPermissions } = req;
+
+    if (!userPermissions || !userPermissions.includes("users:read"))
+      throw new AuthorizationError();
+    const data = await new GetManyUsersService().execute(req.query);
 
     res.json({ success: true, data });
   };
