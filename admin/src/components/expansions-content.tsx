@@ -1,10 +1,12 @@
 "use client";
 
 import { ExpansionsTable } from "./expansions-table";
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { Pagination } from "./pagination";
 import { Expansion } from "@/data/types";
 import { ResourceDeleteDialog } from "./resource-delete-dialog";
+import { deleteExpansionAction } from "@/actions/delete-expansion-action";
+import { useRouter } from "next/navigation";
 
 interface ExpansionsContentProps {
   page: number;
@@ -14,10 +16,21 @@ interface ExpansionsContentProps {
 export type ExpansionToDelete = Omit<Expansion, "createdAt">;
 
 export function ExpansionsContent({ page, expansions }: ExpansionsContentProps) {
+  const [pending, startTransition] = useTransition();
   const [expansionToDelete, setExpansionToDelete] = useState<ExpansionToDelete | null>(null);
+  const router = useRouter();
 
-  function handleDelete(expansion: ExpansionToDelete) {
+  function openDeleteExpansionDialog(expansion: ExpansionToDelete) {
     setExpansionToDelete(expansion);
+  }
+
+  async function handleExpansionDelete() {
+    const newPage = expansions.length == 1 ? page - 1 : page;
+    startTransition(async () => {
+      await deleteExpansionAction.bind(null, expansionToDelete?.id as string)();
+      setExpansionToDelete(null);
+    });
+    router.push(`/dashboard/expansions?page=${newPage}`);
   }
 
   function handleOpenChange(open: boolean) {
@@ -26,7 +39,7 @@ export function ExpansionsContent({ page, expansions }: ExpansionsContentProps) 
 
   return (
     <>
-      <ExpansionsTable expansions={expansions} handleDelete={handleDelete} />
+      <ExpansionsTable expansions={expansions} handleDelete={openDeleteExpansionDialog} />
 
       <Pagination
         basePath="/dashboard/expansions"
@@ -36,9 +49,10 @@ export function ExpansionsContent({ page, expansions }: ExpansionsContentProps) 
       />
 
       <ResourceDeleteDialog
+        pending={pending}
         open={!!expansionToDelete}
         onOpenChange={handleOpenChange}
-        onConfirmClick={() => setExpansionToDelete(null)}
+        onConfirmClick={handleExpansionDelete}
         title={`Delete expansion ${expansionToDelete?.name}?`}
       />
     </>
