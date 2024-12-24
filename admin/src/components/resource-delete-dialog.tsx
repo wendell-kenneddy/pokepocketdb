@@ -3,6 +3,7 @@ import { Button } from "./button";
 
 interface ResourceDeleteDialogProps {
   open: boolean;
+  pending?: boolean;
   title: string;
   description?: string;
   onOpenChange: (open: boolean) => void;
@@ -11,6 +12,7 @@ interface ResourceDeleteDialogProps {
 
 export function ResourceDeleteDialog({
   open,
+  pending,
   title,
   description,
   onOpenChange,
@@ -29,8 +31,8 @@ export function ResourceDeleteDialog({
           </Dialog.Description>
 
           <div className="mt-4 w-full grid grid-cols-2 gap-4">
-            <Button w="max" colorScheme="primary" onClick={onConfirmClick}>
-              Confirm
+            <Button disabled={pending} w="max" colorScheme="primary" onClick={onConfirmClick}>
+              {pending ? "Deleting..." : "Confirm"}
             </Button>
 
             <Dialog.Close asChild>
