@@ -1,7 +1,7 @@
 import z from "zod";
 
 const schema = z.object({
-  PORT: z.string(),
+  API_PORT: z.string(),
   ORIGIN: z.string(),
   REDIS_URL: z.string().url(),
   ACCESS_TOKEN_SECRET: z.string(),
