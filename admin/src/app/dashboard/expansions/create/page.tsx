@@ -1,6 +1,4 @@
-import { Button } from "@/components/button";
-import { Form } from "@/components/form";
-import { FormControl } from "@/components/form-control";
+import { CreateExpansionForm } from "@/components/create-expansion-form";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -12,21 +10,7 @@ export default function CreateExpansion() {
     <main className="w-[90%] max-w-[500px] mx-auto py-4 space-y-4">
       <h2 className="text-lg font-medium sr-only">Create expansion</h2>
 
-      <Form action="#">
-        <FormControl
-          label="Expansion name"
-          labelFor="name"
-          name="name"
-          id="name"
-          type="text"
-          placeholder="Expansion name"
-          minLength={5}
-        />
-
-        <Button w="max" colorScheme="primary">
-          Create
-        </Button>
-      </Form>
+      <CreateExpansionForm />
     </main>
   );
 }
