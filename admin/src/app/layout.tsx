@@ -27,14 +27,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} bg-gray-950 text-gray-100 antialiased`}>
-        <div className="w-full h-[10vh]">
-          <Header />
+      <body
+        className={`${inter.variable} h-[100vh] overflow-y-hidden bg-gray-950 text-gray-100 antialiased`}
+      >
+        <div className="w-full h-[10%]">
+          <Header session={null} />
         </div>
 
-        <div className="w-full h-[80vh]">{children}</div>
+        <div className="w-full h-[80%]">{children}</div>
 
-        <div className="w-full h-[10vh]">
+        <div className="w-full h-[10%]">
           <Footer />
         </div>
       </body>
