@@ -17,9 +17,10 @@ services:
         - action: rebuild
           path: package.json
     ports:
-      - 3333:3333
+      - 8080:8080
     depends_on:
       - db
+      - redis
       - backend-setup
     restart: always
     env_file:
@@ -28,8 +29,6 @@ services:
     container_name: db
     hostname: postgres
     image: postgres:latest
-    ports:
-      - 5743:5432
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
       interval: 5s
@@ -52,5 +51,15 @@ services:
         condition: service_healthy
     env_file:
       - ./backend/.env
+  redis:
+    container_name: redis
+    hostname: redis
+    image: redis/redis-stack-server
+    restart: always
+    volumes:
+      - cache:/etc/data
+    env_file:
+      - ./backend/.env
 volumes:
   db-data:
+  cache:
