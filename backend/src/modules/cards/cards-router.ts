@@ -7,6 +7,18 @@ const cardsController = new CardsController();
 const cardsRouter = Router();
 
 cardsRouter.get("/cards", cardsController.get);
+cardsRouter.get(
+  "/cards/categories",
+  authenticationMiddleware,
+  userPermissionsMiddleware,
+  cardsController.getCategories
+);
+cardsRouter.get(
+  "/cards/types",
+  authenticationMiddleware,
+  userPermissionsMiddleware,
+  cardsController.getPokemonTypes
+);
 cardsRouter.post(
   "/cards",
   authenticationMiddleware,
