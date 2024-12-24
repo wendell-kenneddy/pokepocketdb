@@ -1,5 +1,5 @@
 {
-  "id": "2657e0e7-2247-4f2d-9d32-1195a79e8c1d",
+  "id": "43963b59-99f3-44c1-882d-47468fcc4194",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -60,12 +60,21 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "cards_name_expansion_id_unique": {
+          "name": "cards_name_expansion_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name",
+            "expansion_id"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -97,13 +106,21 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "expansions_name_unique": {
+          "name": "expansions_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.match_loser_cards": {
-      "name": "match_loser_cards",
+    "public.match_cards": {
+      "name": "match_cards",
       "schema": "",
       "columns": {
         "id": {
@@ -124,6 +141,18 @@
           "primaryKey": false,
           "notNull": true
         },
+        "winner_card": {
+          "name": "winner_card",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "count": {
+          "name": "count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp with time zone",
@@ -134,9 +163,9 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "match_loser_cards_match_id_match_results_id_fk": {
-          "name": "match_loser_cards_match_id_match_results_id_fk",
-          "tableFrom": "match_loser_cards",
+        "match_cards_match_id_match_results_id_fk": {
+          "name": "match_cards_match_id_match_results_id_fk",
+          "tableFrom": "match_cards",
           "tableTo": "match_results",
           "columnsFrom": [
             "match_id"
@@ -144,12 +173,12 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "match_loser_cards_card_id_cards_id_fk": {
-          "name": "match_loser_cards_card_id_cards_id_fk",
-          "tableFrom": "match_loser_cards",
+        "match_cards_card_id_cards_id_fk": {
+          "name": "match_cards_card_id_cards_id_fk",
+          "tableFrom": "match_cards",
           "tableTo": "cards",
           "columnsFrom": [
             "card_id"
@@ -157,7 +186,7 @@
           "columnsTo": [
             "id"
           ],
-          "onDelete": "no action",
+          "onDelete": "cascade",
           "onUpdate": "no action"
         }
       },
@@ -177,15 +206,27 @@
           "primaryKey": true,
           "notNull": true
         },
-        "comeback": {
-          "name": "comeback",
+        "turns": {
+          "name": "turns",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_comeback": {
+          "name": "winner_comeback",
           "type": "boolean",
           "primaryKey": false,
           "notNull": true
         },
-        "concede": {
-          "name": "concede",
-          "type": "boolean",
+        "winner_name": {
+          "name": "winner_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "winner_points": {
+          "name": "winner_points",
+          "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
@@ -195,33 +236,52 @@
           "primaryKey": false,
           "notNull": true
         },
-        "winner_type_advantage": {
-          "name": "winner_type_advantage",
-          "type": "boolean",
+        "advantages": {
+          "name": "advantages",
+          "type": "player_advantages",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
-        "winner_type_disadvantage": {
-          "name": "winner_type_disadvantage",
-          "type": "boolean",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "winnerEnergies": {
-          "name": "winnerEnergies",
+        "winner_energies": {
+          "name": "winner_energies",
           "type": "card_types[]",
           "primaryKey": false,
           "notNull": true
         },
-        "loserEnergies": {
-          "name": "loserEnergies",
-          "type": "card_types[]",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "turns": {
-          "name": "turns",
+        "winner_level": {
+          "name": "winner_level",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loser_level": {
+          "name": "loser_level",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loser_name": {
+          "name": "loser_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loser_concede": {
+          "name": "loser_concede",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loser_points": {
+          "name": "loser_points",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "loser_energies": {
+          "name": "loser_energies",
+          "type": "card_types[]",
           "primaryKey": false,
           "notNull": true
         },
@@ -241,8 +301,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.match_winner_cards": {
-      "name": "match_winner_cards",
+    "public.roles": {
+      "name": "roles",
       "schema": "",
       "columns": {
         "id": {
@@ -251,14 +311,72 @@
           "primaryKey": true,
           "notNull": true
         },
-        "match_id": {
-          "name": "match_id",
+        "name": {
+          "name": "name",
           "type": "text",
           "primaryKey": false,
           "notNull": true
         },
-        "card_id": {
-          "name": "card_id",
+        "permissions": {
+          "name": "permissions",
+          "type": "role_permissions[]",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "roles_name_unique": {
+          "name": "roles_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role_id": {
+          "name": "role_id",
           "type": "text",
           "primaryKey": false,
           "notNull": true
@@ -273,25 +391,12 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "match_winner_cards_match_id_match_results_id_fk": {
-          "name": "match_winner_cards_match_id_match_results_id_fk",
-          "tableFrom": "match_winner_cards",
-          "tableTo": "match_results",
+        "users_role_id_roles_id_fk": {
+          "name": "users_role_id_roles_id_fk",
+          "tableFrom": "users",
+          "tableTo": "roles",
           "columnsFrom": [
-            "match_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        },
-        "match_winner_cards_card_id_cards_id_fk": {
-          "name": "match_winner_cards_card_id_cards_id_fk",
-          "tableFrom": "match_winner_cards",
-          "tableTo": "cards",
-          "columnsFrom": [
-            "card_id"
+            "role_id"
           ],
           "columnsTo": [
             "id"
@@ -301,7 +406,15 @@
         }
       },
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -315,6 +428,15 @@
         "pokemon",
         "item",
         "support"
+      ]
+    },
+    "public.player_advantages": {
+      "name": "player_advantages",
+      "schema": "public",
+      "values": [
+        "winner_advantage",
+        "loser_advantage",
+        "neutral"
       ]
     },
     "public.card_types": {
@@ -331,6 +453,32 @@
         "darkness",
         "lightning",
         "dragon"
+      ]
+    },
+    "public.role_permissions": {
+      "name": "role_permissions",
+      "schema": "public",
+      "values": [
+        "expansions:create",
+        "expansions:read",
+        "expansions:update",
+        "expansions:delete",
+        "cards:create",
+        "cards:read",
+        "cards:update",
+        "cards:delete",
+        "matches:create",
+        "matches:read",
+        "matches:update",
+        "matches:delete",
+        "users:create",
+        "users:read",
+        "users:update",
+        "users:delete",
+        "roles:create",
+        "roles:read",
+        "roles:update",
+        "roles:delete"
       ]
     }
   },

@@ -1,1 +1,0 @@
-ALTER TABLE "match_results" ADD COLUMN "loser_name" text NOT NULL;
