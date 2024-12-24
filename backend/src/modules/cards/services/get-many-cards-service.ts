@@ -10,6 +10,10 @@ import {
 import { uuidSchema } from "../../../lib/uuid-schema";
 
 const getManyCardsSchema = z.object({
+  name: z
+    .string()
+    .min(1, "Card name must be at least 1 character long.")
+    .optional(),
   type: z.enum(pokemonTypesEnum.enumValues).optional(),
   category: z.enum(cardCategoriesEnum.enumValues).optional(),
   expansionId: uuidSchema.optional(),
@@ -20,7 +24,7 @@ const getManyCardsSchema = z.object({
 
 export class GetManyCardsService {
   async execute(data: unknown) {
-    const { type, category, expansionId, limit, page, ascOrder } =
+    const { name, type, category, expansionId, limit, page, ascOrder } =
       getManyCardsSchema.parse(data);
 
     const rows = await db
@@ -32,6 +36,7 @@ export class GetManyCardsService {
       .innerJoin(expansions, eq(cards.expansionId, expansions.id))
       .where(
         and(
+          name ? eq(cards.name, name) : undefined,
           category ? eq(cards.category, category) : undefined,
           expansionId ? eq(cards.expansionId, expansionId) : undefined,
           type ? eq(cards.type, type) : undefined
